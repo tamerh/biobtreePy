@@ -1,8 +1,6 @@
-# from .app_pb2_grpc import app_pb2_grpc as biobtree_grpc
-# from .app_pb2 import app_pb2 as biobtree_proto
+import bbpy.pbuf.app_pb2_grpc as biobtree_grpc
+import bbpy.pbuf.app_pb2 as biobtree_proto
 
-from pbuf import app_pb2_grpc as biobtree_grpc
-from pbuf import app_pb2 as biobtree_proto
 import grpc
 import os
 import string
@@ -84,9 +82,9 @@ class bbpy:
                 bbFile = requests.get(latestUrl, allow_redirects=True)
                 with open('biobtree.zip', 'wb') as output:
                     output.write(bbFile.content)
-                zip = zipfile('biobtree.zip')
-                zip.extractall()
-                os.remove('/biobtree.zip')
+                with zipfile.ZipFile('biobtree.zip', 'r') as zip_ref:
+                    zip_ref.extractall(self.bbDir)
+                os.remove('biobtree.zip')
 
             return os.path.abspath('biobtree.exe')
 

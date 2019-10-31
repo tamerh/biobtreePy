@@ -2,3 +2,6 @@ __pycache__/
 dist/
 notes.txt
 .vscode/
+build/
+dist/
+bbpy.egg-info/

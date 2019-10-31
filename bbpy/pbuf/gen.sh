@@ -9,5 +9,5 @@
 rm app_*
 rm attr_*
 
-python -m grpc_tools.protoc --python_out=pbuf -I=. --grpc_python_out=pbuf app.proto
-python -m grpc_tools.protoc --python_out=pbuf -I=.  attr.proto
+python -m grpc_tools.protoc --python_out=.  --grpc_python_out=. app.proto
+python -m grpc_tools.protoc --python_out=.   attr.proto

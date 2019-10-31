@@ -1,6 +1,6 @@
 import unittest
 import os
-from bbpy import bbpy
+import bbpy
 import shutil
 import tests.testutil as bbtutil
 import os
@@ -24,6 +24,7 @@ class TestBiobtreePy(unittest.TestCase):
         if os.path.isdir(os.path.abspath('bb/out')):
             shutil.rmtree(os.path.abspath('bb/out'))
         bb = bbpy.bbpy(outDir='bb')
+        print(dir(bb))
         args = bbtutil.sampleDatasetArgs('bb')
         bb.buildData(rawArgs=args)
         self.assertTrue(os.path.isfile(
