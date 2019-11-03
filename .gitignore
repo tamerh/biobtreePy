@@ -5,3 +5,9 @@ notes.txt
 build/
 dist/
 bbpy.egg-info/
+bb/
+bbChem/
+bbSample/
+doc.ipynb
+outFolder/
+.ipynb_checkpoints/

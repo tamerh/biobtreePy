@@ -2,7 +2,6 @@ import unittest
 import os
 import bbpy
 import shutil
-import tests.testutil as bbtutil
 import os
 
 
@@ -10,25 +9,23 @@ class TestBiobtreePy(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        if os.path.isdir('bb'):
-            shutil.rmtree('bb')
-        os.mkdir('bb')
+        if os.path.isdir('bbtest'):
+            shutil.rmtree('bbtest')
+        os.mkdir('bbtest')
 
     @classmethod
     def tearDownClass(cls):
-        if os.path.isdir('bb'):
-            shutil.rmtree('bb')
+        if os.path.isdir('bbtest'):
+            shutil.rmtree('bbtest')
 
     def test_Search_Mapping(self):
 
-        if os.path.isdir(os.path.abspath('bb/out')):
-            shutil.rmtree(os.path.abspath('bb/out'))
-        bb = bbpy.bbpy(outDir='bb')
-        print(dir(bb))
-        args = bbtutil.sampleDatasetArgs('bb')
-        bb.buildData(rawArgs=args)
+        if os.path.isdir(os.path.abspath('bbtest/out')):
+            shutil.rmtree(os.path.abspath('bbtest/out'))
+        bb = bbpy.bbpy(outDir='bbtest')
+        bb.buildData(datasets='sample_data')
         self.assertTrue(os.path.isfile(
-            os.path.abspath('bb/out/db/db.meta.json')))
+            os.path.abspath('bbtest/out/db/db.meta.json')))
 
         bb.start()
 
@@ -62,7 +59,7 @@ class TestBiobtreePy(unittest.TestCase):
 
     def test_ListGenomes(self):
 
-        bb = bbpy.bbpy(outDir='bb')
+        bb = bbpy.bbpy(outDir='bbtest')
 
         res = bb.listGenomes('ensembl')
         self.assertTrue('homo_sapiens' in res)
@@ -99,7 +96,7 @@ class TestBiobtreePy(unittest.TestCase):
         self.assertTrue('yersinia_rohdei' in res)
 
     def test_ListDatasets(self):
-        bb = bbpy.bbpy(outDir='bb')
+        bb = bbpy.bbpy(outDir='bbtest')
 
         self.assertTrue('uniprot' in bb.datasets.keys())
         self.assertTrue('hgnc' in bb.datasets.keys())
@@ -111,7 +108,7 @@ class TestBiobtreePy(unittest.TestCase):
 
     def test_ListAttr(self):
 
-        bb = bbpy.bbpy(outDir='bb')
+        bb = bbpy.bbpy(outDir='bbtest')
 
         res = bb.listAttrs('hgnc')
         self.assertTrue(len(res) >= 6)

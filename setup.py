@@ -2,12 +2,12 @@ from setuptools import setup
 
 setup(
     name='bbpy',
-    version='1.0.0',
-    description="The biobtreePy package provides an interface to [biobtree](https://github.com/tamerh/biobtree) tool which covers large set of bioinformatics datasets and allows search and chain mappings functionalities.",
+    version='1.0.5',
+    description="This package provides a Python interface to biobtree",
     author="Tamer Gur",
     author_email='tgur@ebi.ac.uk',
     url='https://github.com/tamerh/biobtreePy',
-    long_description="The biobtreePy package provides an interface to [biobtree](https://github.com/tamerh/biobtree) tool which covers large set of bioinformatics datasets and allows search and chain mappings functionalities.",
+    long_description="This package provides a Python interface to biobtree",
     packages=['bbpy', 'bbpy.pbuf'],
     install_requires=[
         "grpcio>=1.24.3",

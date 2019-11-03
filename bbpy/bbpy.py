@@ -43,8 +43,6 @@ class bbpy:
                 raise Exception("Specified outDir is not exist")
 
             self.bbDir = os.path.abspath(outDir)
-            self.localAddr = "localhost:7777"
-            self.localHttpAddr = "http://localhost:8888"
             curDir = os.getcwd()
             try:
                 os.chdir(self.bbDir)
@@ -54,9 +52,9 @@ class bbpy:
                 os.chdir(curDir)
             self.__setConfig__()
 
-    def __isLocalbbrunning__(self):
+    def __isRunning__(self):
         try:
-            r = requests.head(self.localHttpAddr)
+            r = requests.head(self.localWebAddr)
         except:
             return False
         return True
@@ -145,7 +143,7 @@ class bbpy:
                 raise Exception(
                     "Error while 1retrieving meta information. Check configured previous step correctly")
         else:
-            # read conf files
+            # read dataset conf files
             with open(os.path.abspath(self.bbDir+"/conf/source.dataset.json"), 'r') as sourcefile:
                 content = sourcefile.read()
                 self.datasets = json.loads(content)
@@ -161,6 +159,19 @@ class bbpy:
                 self.datasetsByNum[numID] = copy.deepcopy(v)
                 self.datasetsByNum[numID]["id"] = k
                 numIDs.append(numID)
+
+            # read app conf files
+            with open(os.path.abspath(self.bbDir+"/conf/application.param.json"), 'r') as sourcefile:
+                content = sourcefile.read()
+                appparams = json.loads(content)
+                if 'grpcPort' not in appparams.keys():
+                    raise Exception(
+                        "grpcPort could not found check application.param.json file")
+                if 'httpPort' not in appparams.keys():
+                    raise Exception(
+                        "httpPort could not found check application.param.json file")
+                self.localAddr = 'localhost:'+appparams['grpcPort']
+                self.localWebAddr = 'http://localhost:' + appparams['httpPort']
 
         for k in numIDs:  # TODO add chembl etc...
             dataset = self.datasetsByNum[k]["id"]
@@ -197,7 +208,7 @@ class bbpy:
 
                 execFile = self.__bbExecFile__()
 
-                if(not self.__isLocalbbrunning__()):
+                if(not self.__isRunning__()):
 
                     if not os.path.isfile(os.path.abspath(self.bbDir+"/out/db/db.meta.json")):
                         raise Exception(
@@ -215,7 +226,7 @@ class bbpy:
                                 "Timeout while starting up biobtree. Check that you set everything correctly")
 
                         time.sleep(1)
-                        if not self.__isLocalbbrunning__():
+                        if not self.__isRunning__():
                             elapsed = elapsed + 1
                             continue
                         self.channel = grpc.insecure_channel(self.localAddr)
@@ -246,7 +257,7 @@ class bbpy:
             print("When remote bb is set, it is not needed to use this method")
             return
 
-        if self.__isLocalbbrunning__():
+        if self.__isRunning__():
             raise Exception('There is a running biobtree stop first')
 
         curDir = os.getcwd()
@@ -260,7 +271,8 @@ class bbpy:
             if rawArgs is not None:
                 os.system(execFile + " " + rawArgs)
             elif datasets == 'sample_data':
-                pass  # TODO
+                args = self.__sampleDatasetArgs__()
+                os.system(execFile + " " + args)
             else:
                 args = ""
                 if genome is not None:
@@ -279,6 +291,34 @@ class bbpy:
 
         finally:
             os.chdir(curDir)
+
+    def __sampleDatasetArgs__(self, hgnc=False):
+
+        if hgnc:
+            args = " -d hgnc,go,uniprot,ensembl,interpro"
+        else:
+            args = "  -d go,uniprot,ensembl,interpro"
+
+        args = args+" --uniprot.file "+"../sample_data/uniprot_sample.xml.gz"
+        args = args+" --interpro.file "+"../sample_data/interpro_sample.xml.gz"
+
+        if not os.path.isfile(os.path.abspath(self.bbDir+"/ensembl_sample.json")):
+            tar = tarfile.open(
+                os.path.abspath("../sample_data/ensembl_sample.json.tar.gz"), "r:gz")
+            tar.extractall(path=self.bbDir)
+            tar.close()
+        args = args+" --ensembl.file "+"ensembl_sample.json"
+
+        if not os.path.isfile(os.path.abspath(self.bbDir+"/go_sample.owl")):
+            tar = tarfile.open(os.path.abspath(
+                "../sample_data/go_sample.tar.gz"), "r:gz")
+            tar.extractall(path=self.bbDir)
+            tar.close()
+        args = args+" --go.file "+"go_sample.owl"
+
+        args = args+" build"
+
+        return args
 
     def search(self, terms, source=None, filter=None, page=None, limit=1000, showURL=False, lite=True):
 
@@ -387,12 +427,12 @@ class bbpy:
 
                 req.page = lastpagekey
                 newres = self.stub.Mapping(req)
-
-                for i, rnew in newres.results.results:
-                    for j, r in results:
+                for rnew in newres.results.results:
+                    for i in range(len(results)):
+                        r = results[i]
                         if rnew.source.dataset == r.source.dataset and rnew.source.identifier == r.source.identifier:
                             totalMapping = totalMapping+len(rnew.targets)
-                            results[j].targets.extend(rnew.targets)
+                            results[i].targets.extend(rnew.targets)
                             break
                 if len(newres.results.nextpage) > 0:
                     lastpagekey = lastpagekey = newres.results.nextpage
