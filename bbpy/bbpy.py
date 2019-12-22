@@ -251,7 +251,22 @@ class bbpy:
         else:
             raise Exception("Unsupported OS")
 
-    def buildData(self, genome=None, datasets=None, targetDatasets=None, genomePattern=None, rawArgs=None):
+    def getBuiltInDB(self, builtInType):
+
+        curDir = os.getcwd()
+
+        os.chdir(self.bbDir)
+
+        try:
+
+            execFile = self.__bbExecFile__()
+
+            os.system(execFile + " --pre-built "+builtInType + " install")
+
+        finally:
+            os.chdir(curDir)
+
+    def buildData(self, taxonomyIDs=None, rawArgs=None):
 
         if self.remote:
             print("When remote bb is set, it is not needed to use this method")
@@ -270,24 +285,9 @@ class bbpy:
 
             if rawArgs is not None:
                 os.system(execFile + " " + rawArgs)
-            elif datasets == 'sample_data':
-                args = self.__sampleDatasetArgs__()
-                os.system(execFile + " " + args)
-            else:
-                args = ""
-                if genome is not None:
-                    args = args + " -s " + genome
-                elif genomePattern is not None:
-                    args = args + " -s " + genomePattern
-
-                if datasets is not None:
-                    args = args + " -d " + datasets
-
-                if targetDatasets is not None:
-                    args = args + " -d " + targetDatasets
-
-                args = args + " build"
-                os.system(execFile + " " + args)
+            elif taxonomyIDs is not None:
+                args = " -tax "+taxonomyIDs+" --keep --ensembl-orthologs" + " build"
+                os.system(execFile + args)
 
         finally:
             os.chdir(curDir)

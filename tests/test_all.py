@@ -23,20 +23,20 @@ class TestBiobtreePy(unittest.TestCase):
         if os.path.isdir(os.path.abspath('bbtest/out')):
             shutil.rmtree(os.path.abspath('bbtest/out'))
         bb = bbpy.bbpy(outDir='bbtest')
-        bb.buildData(datasets='sample_data')
+        bb.getBuiltInDB('demo')
         self.assertTrue(os.path.isfile(
             os.path.abspath('bbtest/out/db/db.meta.json')))
 
         bb.start()
 
-        res = bb.search('tpi1, vav_human, ENST00000297261')
+        res = bb.search('tpi1,vav_human,ENST00000297261')
         self.assertTrue(len(res) == 3)
         self.assertTrue(res['keyword'][0] == 'TPI1')
         self.assertTrue(res['keyword'][1] == 'VAV_HUMAN')
-        self.assertTrue(res['identifier'][0] == 'ENSG00000111669')
+        self.assertTrue(res['identifier'][0] == 'HGNC:12009')
         self.assertTrue(res['identifier'][1] == 'P15498')
         self.assertTrue(res['identifier'][2] == 'ENST00000297261')
-        self.assertTrue(res['dataset'][0] == 'ensembl')
+        self.assertTrue(res['dataset'][0] == 'hgnc')
         self.assertTrue(res['dataset'][1] == 'uniprot')
         self.assertTrue(res['dataset'][2] == 'transcript')
 
