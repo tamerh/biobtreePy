@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='bbpy',
-    version='1.0.5',
+    version='1.0.6',
     description="This package provides a Python interface to biobtree",
     author="Tamer Gur",
     author_email='tgur@ebi.ac.uk',

@@ -251,7 +251,42 @@ class bbpy:
         else:
             raise Exception("Unsupported OS")
 
-    def getBuiltInDB(self, builtInType):
+    """
+    Get pre build biobtree database
+
+    Pre build biobtree database for commonly studied datasets and model organism genomes. Once this function called it retrieves
+    the pre build database saves to users output directory. To created custom database with data not included in builtin database use buildData function
+
+    :type built in database type accepted values are 1,2,3 and 4. Currently there are 4 different builtin database;
+    Type 1
+    Included datasets hgnc,hmdb,taxonomy,go,efo,eco,chebi,interpro
+    Included uniprot proteins and ensembl genomes belongs to following organisms
+
+    homo_sapiens 9606 --> ensembl
+    danio_rerio 7955 zebrafish --> ensembl
+    gallus_gallus 9031 chicken --> ensembl
+    mus_musculus 10090 --> ensembl
+    Rattus norvegicus 10116 ---> ensembl
+    saccharomyces_cerevisiae 4932--> ensembl,ensembl_fungi
+    arabidopsis_thaliana 3702--> ensembl_plants
+    drosophila_melanogaster 7227 --> ensembl,ensembl_metazoa
+    caenorhabditis_elegans 6239 --> ensembl,ensembl_metazoa
+    Escherichia coli 562 --> ensembl_bacteria
+    Escherichia coli str. K-12 substr. MG1655 511145 --> ensembl_bacteria
+    Escherichia coli K-12 83333 --> ensembl_bacteria
+
+    Type 2
+    Instead of genomes in in the type 1 it contains human and all the mouse strains genomes with their uniprot proteins.
+    In addition hgnc,hmdb,taxonomy,go,efo,eco,chebi,interpro datasets are included
+
+    Type 3
+    Contains no genome but it contains all the uniprot data with hgnc,hmdb,taxonomy,go,efo,eco,chebi,interpro
+
+    Type 4
+    Contains no genome but full uniprot and chembl data with hgnc,hmdb,taxonomy,go,efo,eco,chebi,interpro
+    """
+
+    def getBuiltInDB(self, builtInType="1"):
 
         curDir = os.getcwd()
 

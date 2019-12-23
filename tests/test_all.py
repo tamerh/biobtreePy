@@ -116,7 +116,7 @@ class TestBiobtreePy(unittest.TestCase):
 
         res = bb.listAttrs('ensembl')
         self.assertTrue(len(res) >= 9)
-        self.assertTrue('seq_region_name' in res)
+        self.assertTrue('seq_region' in res)
 
         res = bb.listAttrs('transcript')
         self.assertTrue(len(res) >= 7)
