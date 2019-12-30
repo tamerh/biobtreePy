@@ -1,6 +1,5 @@
 ## biobtreePy
-Python package for genomic research via [biobtree](https://github.com/tamerh/biobtree). It aims to provide an alternative
-to existing packages such as biomaRt with abilty process large and diverse datasets effectievly and allows executing simple or complex queries between these datasets.
+Python package for genomic research via [biobtree](https://github.com/tamerh/biobtree). It aims to provide a strong alternative to similar tools with abilty process large and diverse datasets effectievly and allows executing simple or complex queries between these datasets.
 
 ## Installation
 
@@ -14,9 +13,6 @@ pip install bbpy
 import bbpy
 import os
 
-# first create or used existing folder for the tool files
-os.mkdir('outFolder')
-
 # create the package class instance with new or existing folder which data built before.
 bb=bbpy.bbpy('specify your directory')
 
@@ -26,7 +22,7 @@ bb=bbpy.bbpy('specify your directory')
 # check document for included dataset or other builtin databases or build custom data
 bb.getBuiltInDB()
 
-# starts server for executing queries inside Python pipelines and provide web interface for expolaration with example queries
+# starts server for executing queries inside Python pipelines and provide web interface with examples
 # web interface address http://localhost:8888/ui/
 bb.start()
 
