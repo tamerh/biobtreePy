@@ -1,6 +1,12 @@
 ## biobtreePy
 Python package for genomic research via [biobtree](https://github.com/tamerh/biobtree). It aims to provide a strong alternative to similar tools with abilty process large and diverse datasets effectievly and allows executing simple or complex queries between these datasets.
 
+## Demo
+
+Demo of web interface which covers all the datasets with examples
+
+https://www.ebi.ac.uk/~tgur/biobtree/
+
 ## Installation
 
 ```python
